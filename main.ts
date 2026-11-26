@@ -12,6 +12,12 @@ if (line.length < 1 || line.length > 200 || line.trim() !== line) {
   throw new Error(`Line fails the 1-200 character gate: ${line.length} chars`);
 }
 
+// Gate: exactly one sentence — no newline, one terminal mark at the end
+// (allowing a closing quote after it).
+if (/\n/.test(line) || (line.match(/[.!?]/g) ?? []).length !== 1 || !/[.!?]["']?$/.test(line)) {
+  throw new Error("Line must be exactly one sentence");
+}
+
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", line, "utf8");
 console.log(`Wrote ${line.length} characters to /output/entry.txt`);
